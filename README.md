@@ -1,6 +1,8 @@
 # Cedars-Sinai-Internship
 
-Goal: Design shim coils to correct the off-resonance created by rectal air around the prostate region
+## Goal: 
+* Design shim coils to correct the off-resonance created by rectal air around the prostate region
+* Improve prostate cancer identification
 
 
 Procedure:
@@ -14,8 +16,10 @@ Procedure:
 8. Genetic algorithm
 
 function order:
-Define mask function
-Coil plotting function
-Biot Savart function
+1. Apply_Manual_Mask
+2. Coil_Plot_9_vars
+3. Biot_Savart
+4. e
+5. Bz_Calc
 Linear least square function
 BzCalc function
