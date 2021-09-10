@@ -124,4 +124,3 @@ else
     load('Manual_Mask.mat');
     AllPhasemap(n).Mask=Mask;
 end
-    %clear Mask
