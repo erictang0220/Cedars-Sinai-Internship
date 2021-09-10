@@ -1,5 +1,4 @@
 function [bodyBzEachCoil] = FastBiotSavartZMulti(input, mask)
-%2016/12/28 Randy Yang
 % Bz: Z-direction magnetic field 
 %-----------r(m),theta(d)_rotate againsty,phi(d)_rotate against z: coil center location to the center of the hemsphere-
 %-----------a(m): radius of the coil               
