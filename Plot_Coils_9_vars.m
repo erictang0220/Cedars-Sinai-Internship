@@ -1,12 +1,14 @@
 function [] = Coil_Brain_Plot_9var(input, mask, bodyMask)
-%2016/12/28 Randy Yang
+
 % Bz: Z-direction magnetic field 
-%-----------r(meter),theta(degree)_rotate againsty,phi(degree)_rotate against z: coil center location to the center of the hemsphere-
-%-----------a(meter): radius of the coil               
-%-----------abratio: elliptical ratio
-%-----------angX(degree):  angle against x of the tangent plane
-%-----------angY(degree):  angle against y the tangent plane
-%-----------angZ(degree):  angle against z of the tangent plane
+%-----------xc(meter):      x-coordinate of coil center
+%-----------yc(meter):      y-coordinate of coil center
+%-----------zc(meter):      z-coordinate of coil center
+%-----------r(meter):       radius of the coil               
+%-----------abratio:        elliptical ratio
+%-----------angX(degree):   angle against x axis
+%-----------angY(degree):   angle against y axis
+%-----------angZ(degree):   angle against z axis
 %% parameter setup
 
 % physical phantom
@@ -67,13 +69,7 @@ th = height/nz0; % thickness, aka z-resolution
 % Get the middle portion of the Mask
 % mask = mask(end/4+1:end*3/4,:,:);
 % bodyMask = bodyMask(end/4+1:end*3/4,:,:);
-
-%% correct for an offset of the center
     
-% [nx ny nz]= size(x);
-% nxi = round(nx/2)-round(nx0/2); nxf = round(nx/2)+round(nx0/2)-1;
-% nyi = round(ny/2)-round(ny0/2); nyf = round(ny/2)+round(ny0/2)-1;
-% nzi = round(nz/2)-round(nz0/2); nzf = round(nz/2)+round(nz0/2)-1;
 
 % offset the prostate to the origin
 % offset for z (in meters)
@@ -101,10 +97,6 @@ rhx = 0.005;
 z = z + rhz;
 x = x + rhx;
 % y = y + rhy;
-
-% x = x(nxi-offsetx:nxf-offsetx,nyi:nyf,nzi-offsetz:nzf-offsetz);
-% y = y(nxi-offsetx:nxf-offsetx,nyi-offsety:nyf-offsety,nzi-offsetz:nzf-offsetz);
-% z = z(nxi-offsetx:nxf-offsetx,nyi-offsety:nyf-offsety,nzi-offsetz:nzf-offsetz);
 
 Bz = zeros([size(x,1) size(x,2) size(x,3) size(input,1)]);
 
@@ -192,10 +184,6 @@ for coil=1:N
     % coordi2_2 = rot1*rot2*rot3*rot4*rot5*coordi2+coffset;
 
     coordi1_1 =  coordi1_2;
-
-    % x1f = reshape(coordi1_2(1,:),[1 size(coordi1_1,2)]);
-    % y1f = reshape(coordi1_2(2,:),[1 size(coordi1_1,2)]);
-    % z1f = reshape(coordi1_2(3,:),[1 size(coordi1_1,2)]);
         
     % move to the center in the end
     x1f = coordi1_2(1,:) + xc;
@@ -208,15 +196,6 @@ for coil=1:N
 end
     %seperate Bz for each coil for parrallization
 
-    
-    %   figure(100), plot3(x1f,y1f,z1f,'.'), axis([-0.3 0.3 -0.3 0.3 -0.3 0.3]), hold on
-    %   plot3(x1,y1,z1,'r.')
-    %   set(gcf,'Color',[1 1 1])
-
-
-
 end
 
 
-
-%Bz_f = Bzsum(nxi-offsety:nxf-offsety,nyi:nyf,nzi-offsetz:nzf-offsetz);
