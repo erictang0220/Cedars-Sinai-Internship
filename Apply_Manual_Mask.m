@@ -1,5 +1,4 @@
-%% Creat Mask
-% Creat mask if original mask doesn't exist
+%% Creat Mask of ROI
 
 MaskView = 'Axis'; % This is the orientation of the matrix. you can start with
 FlagMask = true; % meaning use mask
@@ -11,16 +10,17 @@ AllPhasemap(1).Mask=ones(size(CTmag)); % UNIC_B0Map.mag
 % AllPhasemap(1).Mask=UNIC_B0Map.Parameters.Mask; % to generate a dummy mask for the code to start with.
 AllPhasemap(n).ManualMask=0; % 
 
+% Only create mask if a mask doesn't exist
 if ~exist('Manual_Mask.mat')
-    mag_all = CTmag.*AllPhasemap(1).Mask;% UNIC_B0Map.mag.*AllPhasemap(1).Mask; %sqrt(sum(abs(permute(RawdataFT(:,:,:,:,1),[1 2 3 5 4])),5)).*AllPhasemap(1).Mask;
+    mag_all = CTmag.*AllPhasemap(1).Mask;% UNIC_B0Map.mag.*AllPhasemap(1).Mask; 
     mag_all=mag_all/(max(mag_all(:)));
     % Readout FOV at center
     RD_FOV=[(round(size(mag_all,1)/2)+1-round(size(mag_all,1)/4))...
         :(round(size(mag_all,1)/2)+1+round(size(mag_all,1)/4))];
     % Change the view angle of rough mask
     Rawmask=AllPhasemap(1).Mask;
-    clear Newmask Mask_m; %what does this do
-    %%
+    clear Newmask Mask_m; 
+    % change viewing orientation
     switch MaskView
         case 'Axis'
             centMask=zeros(size(mag_all));
@@ -61,18 +61,16 @@ if ~exist('Manual_Mask.mat')
                         set(gcf, 'units', 'normalized', 'Position', [0.045, 0.3, 0.4, 0.5]) %Charles 30Jan2019, show the figure at a better location
                         %Orginally: set(gcf, 'Position', [100, 100, 1000, 1000])
                         [Mask_m tmp_xi tmp_yi]=roipoly;
-                        0
                     else
                         imagesc(nmag);colormap gray;
                         set(gcf, 'units', 'normalized', 'Position', [0.045, 0.3, 0.4, 0.5]) %Charles 30Jan2019, show the figure at a better location
-                        %Orginally: set(gcf, 'Position', [100, 100, 1000, 1000])
                         h = impoly(gca,[tmp_xi tmp_yi]); 
                         Generatecontour=input('Re-contour?');
                         Mask_m = createMask(h); %BW contains the mask which you just altered.
                         pos = getPosition(h); 
                         tmp_xi=pos(:,1);
                         tmp_yi=pos(:,2);
-                        if Generatecontour % overwrite mask if need more points
+                        if Generatecontour % overwrite the previous mask if responds to re-contour
                             imagesc(nmag);colormap gray;
                             [Mask_m tmp_xi tmp_yi]=roipoly;
                         end    
@@ -93,17 +91,11 @@ if ~exist('Manual_Mask.mat')
                 end
                 
             end
-            % mask = repmat(AllPhasemap(n).Mask(:,:,ms),[1,1,size(phase,3)]);
-            % phase(~mask)=nan;
+       
             
         end
     end
     
-
-    %fill holes
-%     for s=1:size(AllPhasemap(n).Mask,3)
-%         Newmask(:,:,s)= imfill(Newmask(:,:,s),'holes');
-%     end
     switch MaskView
         case 'Axis'
              AllPhasemap(n).Mask=Newmask;
