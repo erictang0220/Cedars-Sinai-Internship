@@ -20,19 +20,24 @@ Design shim coils to correct the off-resonance created by rectal air around the 
 
 ## Usage
 1. Supply your own phase maps to serve as B0 and magnitude maps for drawing mask
-2. Apply the functions in the following order
-  a. Apply_Manual_Mask
-  b. Plot_Coils_9_vars
-  c. Biot_Savart
-  d. Solve_Shim_Current
-  e. Bz_Calc
+2. Use Apply_Manual_Mask to draw a mask around the region of interest (ROI). 
+3. Come up with coil parameter, each coil should have 9 variables (specified in the header of the function)
+  * the last variable, current, should be set to 1 for now
+5. Feed the coil matrix into Plot_Coils_9_vars, observe coil position with respect to the ROI and body
+6. Use BiotSavart with coil position, mask, and B0
+7. Use Solve_Shim_Current with the output from BiotSavart and mask
+8. Use Bz_Calc with the output from Solve_Shim_Current to get Bz
 
-## Results:
-* Improve prostate field homogeneity by 60%
-
-## function order:
+The functions are applied in the following order 
 1. Apply_Manual_Mask
 2. Plot_Coils_9_vars
 3. Biot_Savart
 4. Solve_Shim_Current
 5. Bz_Calc
+
+## Credits
+Thanks to Hsin-Jung (Randy) Yang and Yu-Heng (Chris) Huang for coding structure and guidance 
+
+## Testing input
+
+
