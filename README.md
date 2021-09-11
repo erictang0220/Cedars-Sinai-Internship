@@ -14,7 +14,18 @@ Design shim coils to correct the off-resonance created by rectal air around the 
 8. Genetic algorithm
 
 ## Installation
-1. Download MATLAB from [Go to the Support Web Site](https://support.west-wind.com)
+1. Download and install [MATLAB](https://www.mathworks.com/login?uri=%2Fdownloads%2Fweb_downloads)
+2. Install Image Processing Toolbox and Parallel Computing Toolbox under **Home** tab, **Add-ons**, **Get Add-ons**.
+3. Save the five MATLAB functions to a folder and open the folder with MATLAB
+
+## Usage
+1. Supply your own phase maps to serve as B0 and magnitude maps for drawing mask
+2. Apply the functions in the following order
+  a. Apply_Manual_Mask
+  b. Plot_Coils_9_vars
+  c. Biot_Savart
+  d. Solve_Shim_Current
+  e. Bz_Calc
 
 ## Results:
 * Improve prostate field homogeneity by 60%
