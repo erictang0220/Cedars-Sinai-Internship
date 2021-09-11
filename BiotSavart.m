@@ -1,11 +1,14 @@
 function [bodyBzEachCoil] = FastBiotSavartZMulti(input, mask)
+
 % Bz: Z-direction magnetic field 
-%-----------r(m),theta(d)_rotate againsty,phi(d)_rotate against z: coil center location to the center of the hemsphere-
-%-----------a(m): radius of the coil               
-%-----------abratio: elliptical ratio
-%-----------angX(d):  angle against x of the tangent plane
-%-----------angY(d):  angle against y the tangent plane
-%-----------angZ(d):  angle against z of the tangent plane
+%-----------xc(meter):      x-coordinate of coil center
+%-----------yc(meter):      y-coordinate of coil center
+%-----------zc(meter):      z-coordinate of coil center
+%-----------r(meter):       radius of the coil               
+%-----------abratio:        elliptical ratio
+%-----------angX(degree):   angle against x axis
+%-----------angY(degree):   angle against y axis
+%-----------angZ(degree):   angle against z axis
 %% parameter setup
 
 % physical phantom
@@ -65,13 +68,7 @@ th = height/nz0; % thickness, aka z-resolution
 % Get the middle portion of the Mask
 % mask = mask(end/4+1:end*3/4,:,:);
 % bodyMask = bodyMask(end/4+1:end*3/4,:,:);
-
-%% correct for an offset of the center
-    
-% [nx ny nz]= size(x);
-% nxi = round(nx/2)-round(nx0/2); nxf = round(nx/2)+round(nx0/2)-1;
-% nyi = round(ny/2)-round(ny0/2); nyf = round(ny/2)+round(ny0/2)-1;
-% nzi = round(nz/2)-round(nz0/2); nzf = round(nz/2)+round(nz0/2)-1;
+  
 
 % offset the prostate to the origin
 % offset for z (in meters)
@@ -100,9 +97,6 @@ z = z + rhz;
 x = x + rhx;
 % y = y + rhy;
 
-% x = x(nxi-offsetx:nxf-offsetx,nyi:nyf,nzi-offsetz:nzf-offsetz);
-% y = y(nxi-offsetx:nxf-offsetx,nyi-offsety:nyf-offsety,nzi-offsetz:nzf-offsetz);
-% z = z(nxi-offsetx:nxf-offsetx,nyi-offsety:nyf-offsety,nzi-offsetz:nzf-offsetz);
 
 Bz = zeros([size(x,1) size(x,2) size(x,3) size(input,1)]);
 Bzc = zeros([size(x,1) size(x,2) size(x,3)]); % 192 x 192 x 96
@@ -162,14 +156,12 @@ z2 = z1;
 y1 = b*sin((0:359)*pi/180);
 y2 = b*sin((1:360)*pi/180);
 
+% coordi1 and coordi2 different by 1 degree--> for dx,dy,dz calculation later
 coordi1 = [x1; y1; z1];
 coordi2 = [x2; y2; z2];
 
 %-------------------------
 %rotate angle of the tangent plane 
-
-
-%% 1 raws
 
 
     
@@ -198,6 +190,7 @@ coordi2 = [x2; y2; z2];
             0 sin(angX) cos(angX)];
     
     coordi1_2 = rot1*rot2*rot3*coordi1;
+    % offset to the center
     coordi1_2 = cat(1, coordi1_2(1,:) + xc, coordi1_2(2,:) + yc, coordi1_2(3,:) + zc);
     
     coordi2_2 = rot1*rot2*rot3*coordi2;
@@ -215,7 +208,7 @@ coordi2 = [x2; y2; z2];
     x2f = reshape(coordi2_2(1,:),[1 size(coordi1_1,2)]); % same as x2f = coordi2_2(1,:)
     y2f = reshape(coordi2_2(2,:),[1 size(coordi1_1,2)]);
     z2f = reshape(coordi2_2(3,:),[1 size(coordi1_1,2)]);
-    % get the difference in coordinate by 1 degree?
+    % get the difference in coordinate by 1 degree
     dlx = x2f-x1f;
     dly = y2f-y1f;
     dlz = z2f-z1f;
@@ -234,11 +227,11 @@ coordi2 = [x2; y2; z2];
         xm=repmat(x(mask),1,length(x1f)); % size pixnum x 360
         ym=repmat(y(mask),1,length(x1f));
         zm=repmat(z(mask),1,length(x1f));
-        % physcial coord - average coil position? --> distance to coils
+        % prostate position - average coil position --> distance to coils
         rx = xm - (x1fm+x2fm)/2;
         ry = ym - (y1fm+y2fm)/2;
         rz = zm - (z1fm+z2fm)/2;
-        % total displacement?
+        % total displacement
         rsq = sqrt(rx.^2 + ry.^2 + rz.^2);
         %for faster implementation
         r3=rsq.*rsq.*rsq;
@@ -271,15 +264,8 @@ coordi2 = [x2; y2; z2];
     Bzc = zeros([size(x,1) size(x,2) size(x,3)]);
     
     
-    %   figure(100), plot3(x1f,y1f,z1f,'.'), axis([-0.3 0.3 -0.3 0.3 -0.3 0.3]), hold on
-    %   plot3(x1,y1,z1,'r.')
-    %   set(gcf,'Color',[1 1 1])
 end
 % convert from ppm to Hz
 Bz = Bz*123242249;
 % Bz = Bz*123242447;
 bodyBzEachCoil = Bz;
-
-%Bz_f=sum(Bz,4)*123242249;
-
-%Bz_f = Bzsum(nxi-offsety:nxf-offsety,nyi:nyf,nzi-offsetz:nzf-offsetz);
