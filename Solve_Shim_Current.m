@@ -1,7 +1,6 @@
 % solve current for shim 
 function [current] = solveShimCurrent(bodyBzEachCoil, bodyB0, mask, DClimit)
     
-% DClimit=7;
 [~, ~, ~, coilNum] = size(bodyBzEachCoil);
 lb0 = -ones(coilNum,1)*DClimit;
 ub0 = ones(coilNum,1)*DClimit;
@@ -14,10 +13,10 @@ X0 = zeros(coilNum+1,1);
 
 B0f = bodyB0(mask); % get B0 of the prostate region 
 
-Bzf = zeros(length(B0f),coilNum); % dummy initialization
+Bzf = zeros(length(B0f),coilNum);
 for i = 1:coilNum        
     Bz_tmp = bodyBzEachCoil(:,:,:,i);
-    Bzf(:,i) = Bz_tmp(mask); % get 1A Bz of the prostate region
+    Bzf(:,i) = Bz_tmp(mask); % store 1A Bz of the prostate region for each coil in a column
 end
 
 % field offset
