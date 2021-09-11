@@ -6,7 +6,7 @@ lb0 = -ones(coilNum,1)*DClimit;
 ub0 = ones(coilNum,1)*DClimit;
 X0 = zeros(coilNum,1); % initial val
 
-% field offset
+% offset (1 more than coilNum)
 lb0(length(lb0)+1) = -10000;
 ub0(length(ub0)+1) = 10000;
 X0 = zeros(coilNum+1,1);
