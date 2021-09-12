@@ -22,7 +22,7 @@ Design shim coils to correct the off-resonance created by rectal air around the 
 1. Supply your own phase maps to serve as B0 and magnitude maps for drawing mask
 2. Use Apply_Manual_Mask to draw a mask around the region of interest (ROI). 
 3. Come up with coil parameter, each coil should have 9 variables (specified in the header of the function)
- * the last variable, current, should be set to 1 for now
+    * the last variable, current, should be set to 1 for now
 5. Feed the coil matrix into Plot_Coils_9_vars, observe coil position with respect to the ROI and body
 6. Use BiotSavart with coil position, mask, and B0
 7. Use Solve_Shim_Current with the output from BiotSavart and mask
