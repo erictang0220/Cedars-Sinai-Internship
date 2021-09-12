@@ -39,5 +39,4 @@ The functions are applied in the following order
 Thanks to Hsin-Jung (Randy) Yang and Yu-Heng (Chris) Huang for coding structure and guidance 
 
 ## Testing input
-
-
+The magnitude map **mag** and phase map **phasemap** can be found in the [testing physical phantom input](
